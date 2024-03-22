@@ -56,6 +56,6 @@ def home(request: HttpRequest) -> HttpResponse:
         form = request.POST and ProfileForm(request.POST, instance=request.user) or ProfileForm(instance=request.user)
         if request.POST and form.is_valid():
             form.save()
-        return render(request, "magic_link/home.html", {'profile_form': form})
+        return render(request, "magic_link/home.html", {"profile_form": form})
 
     return redirect("magic-link:sign-in")

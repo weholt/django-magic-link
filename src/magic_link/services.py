@@ -1,10 +1,11 @@
-from django.urls import reverse
 from typing import Optional
-from django.http import HttpRequest
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
+from django.http import HttpRequest
+from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
@@ -14,7 +15,7 @@ User = get_user_model()
 def send_sign_in_email(request: HttpRequest, user: User) -> None:
     token = default_token_generator.make_token(user)
     uid = urlsafe_base64_encode(force_bytes(user.pk))
-    verification_link = request.build_absolute_uri(reverse('magic-link:verify-email', args=[uid, token])) #f"{os.environ['EMAIL_VERIFICATION_URL']}/{uid}/{token}/"
+    verification_link = request.build_absolute_uri(reverse("magic-link:verify-email", args=[uid, token]))  # f"{os.environ['EMAIL_VERIFICATION_URL']}/{uid}/{token}/"
 
     subject = "Verify your email address 🚀"
     message = "Hi there 🙂\n" "Please click " f'<a href="{verification_link}" target="_blank">here</a> ' "to verify your email address"
