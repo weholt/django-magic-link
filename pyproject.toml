@@ -1,0 +1,97 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "magic_link"
+dynamic = ["version"]
+description = ''
+readme = "README.rst"
+requires-python = ">=3.12"
+license = "MIT"
+keywords = []
+authors = [
+  { name = "Thomas Weholt", email = "thomas@weholt.org" },
+]
+classifiers = [  
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 5.0",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+]
+
+dependencies = [
+  "django"
+]
+
+[project.urls]
+Documentation = "https://github.com/weholt/django_magic_link#readme"
+Issues = "https://github.com/weholt/django_magic_link/issues"
+Source = "https://github.com/weholt/django_magic_link"
+
+[tool.hatch.version]
+path = "src/magic_link/__about__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "src/magic_link",
+]
+
+[tool.hatch.envs.default]
+dependencies = [
+  "coverage[toml]>=6.5",
+  "pytest",
+]
+[tool.hatch.envs.default.scripts]
+test = "pytest {args:tests}"
+test-cov = "coverage run -m pytest {args:tests}"
+cov-report = [
+  "- coverage combine",
+  "coverage report",
+]
+cov = [
+  "test-cov",
+  "cov-report",
+]
+
+[[tool.hatch.envs.all.matrix]]
+python = ["3.8", "3.9", "3.10", "3.11", "3.12"]
+
+[tool.hatch.envs.types]
+dependencies = [
+  "mypy>=1.0.0",
+]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/magic_link tests}"
+
+[tool.coverage.run]
+source_pkgs = ["magic_link", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/magic_link/__about__.py",
+]
+
+[tool.black]
+line-length = 180
+target-version = ['py312']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+combine_as_imports = true
+include_trailing_comma = true
+line_length = 180
+multi_line_output = 3
+known_first_party = ["config"]

@@ -1,0 +1,5 @@
+[flake8]
+max-line-length = 180
+per-file-ignores = config/settings/*:F405 F403 F401
+ignore = E501, W503, E203,E701
+extend-ignore = E203,E701
