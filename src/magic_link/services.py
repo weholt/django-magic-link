@@ -15,10 +15,17 @@ User = get_user_model()
 def send_sign_in_email(request: HttpRequest, user: User) -> None:
     token = default_token_generator.make_token(user)
     uid = urlsafe_base64_encode(force_bytes(user.pk))
-    verification_link = request.build_absolute_uri(reverse("magic-link:verify-email", args=[uid, token]))  # f"{os.environ['EMAIL_VERIFICATION_URL']}/{uid}/{token}/"
+    verification_link = request.build_absolute_uri(
+        reverse("verify-email", args=[uid, token])
+    )
 
     subject = "Verify your email address 🚀"
-    message = "Hi there 🙂\n" "Please click " f'<a href="{verification_link}" target="_blank">here</a> ' "to verify your email address"
+    message = (
+        "Hi there 🙂\n"
+        "Please click "
+        f'<a href="{verification_link}" target="_blank">here</a> '
+        "to verify your email address"
+    )
     send_mail(subject, "", settings.EMAIL_HOST_USER, [user.email], html_message=message)
 
 

@@ -35,14 +35,27 @@ class SendSignInEmail(View):
         return render(request, "magic_link/sign_in.html", {"form": form})
 
     def post(self, request: HttpRequest) -> HttpResponse:
-        data = {"username": request.POST["email"], "email": request.POST["email"], "password": request.POST["email"]}
-        user, created = User.objects.get_or_create(email=data["email"], defaults={"username": data["email"], "password": data["email"]})
+        data = {
+            "username": request.POST["email"],
+            "email": request.POST["email"],
+            "password": request.POST["email"],
+        }
+        user, created = User.objects.get_or_create(
+            email=data["email"],
+            defaults={"username": data["email"], "password": data["email"]},
+        )
         return self._send_verification_and_respond(request, user)
 
     @staticmethod
-    def _send_verification_and_respond(request: HttpRequest, user: User) -> HttpResponse:
+    def _send_verification_and_respond(
+        request: HttpRequest, user: User
+    ) -> HttpResponse:
         send_sign_in_email(request, user)
-        message = f"We've sent an email ✉️ to " f'<a href=mailto:{user.email}" target="_blank">{user.email}</a> ' "Please check your email to verify your account"
+        message = (
+            f"We've sent an email ✉️ to "
+            f'<a href=mailto:{user.email}" target="_blank">{user.email}</a> '
+            "Please check your email to verify your account"
+        )
         return HttpResponse(message)
 
 
@@ -53,7 +66,11 @@ def sign_out(request: HttpRequest) -> HttpResponse:
 
 def home(request: HttpRequest) -> HttpResponse:
     if not request.user.is_anonymous and request.user.has_verified_email:
-        form = request.POST and ProfileForm(request.POST, instance=request.user) or ProfileForm(instance=request.user)
+        form = (
+            request.POST
+            and ProfileForm(request.POST, instance=request.user)
+            or ProfileForm(instance=request.user)
+        )
         if request.POST and form.is_valid():
             form.save()
         return render(request, "magic_link/home.html", {"profile_form": form})
